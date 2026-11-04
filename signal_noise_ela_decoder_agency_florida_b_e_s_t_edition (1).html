@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyberpunk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal & Noise: ELA Decoder Agency (Florida B.E.S.T. Edition)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=VT323&family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            bg: 'var(--color-bg)',
+                            card: 'var(--color-card)',
+                            border: 'var(--color-border)',
+                            primary: 'var(--color-primary)',
+                            secondary: 'var(--color-secondary)',
+                            accent: 'var(--color-accent)',
+                            text: 'var(--color-text)',
+                            muted: 'var(--color-muted)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* CSS VARIABLE THEMES */
+        :root[data-theme="cyberpunk"] {
+            --color-bg: #0f172a;
+            --color-card: #1e293b;
+            --color-border: #334155;
+            --color-primary: #00f3ff;
+            --color-secondary: #a855f7;
+            --color-accent: #ffe600;
+            --color-text: #f8fafc;
+            --color-muted: #94a3b8;
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+            --theme-radius: 0.75rem;
+            --theme-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            --bg-grid: radial-gradient(circle at 15% 15%, rgba(0, 243, 255, 0.08) 0%, transparent 40%), linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+
+        :root[data-theme="arcade"] {
+            --color-bg: #051409;
+            --color-card: #0a2912;
+            --color-border: #155e2b;
+            --color-primary: #10b981;
+            --color-secondary: #f59e0b;
+            --color-accent: #ec4899;
+            --color-text: #34d399;
+            --color-muted: #059669;
+            --font-heading: 'Press Start 2P', cursive;
+            --font-body: 'VT323', monospace;
+            --theme-radius: 0px;
+            --theme-shadow: 4px 4px 0px #155e2b;
+            --bg-grid: linear-gradient(rgba(16, 185, 129, 0.05) 50%, rgba(0, 0, 0, 0.25) 51%);
+        }
+
+        :root[data-theme="spy"] {
+            --color-bg: #090a0f;
+            --color-card: #121620;
+            --color-border: #2a3245;
+            --color-primary: #d97706;
+            --color-secondary: #3b82f6;
+            --color-accent: #ef4444;
+            --color-text: #e2e8f0;
+            --color-muted: #64748b;
+            --font-heading: 'JetBrains Mono', monospace;
+            --font-body: 'JetBrains Mono', monospace;
+            --theme-radius: 0.375rem;
+            --theme-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+            --bg-grid: linear-gradient(to right, rgba(217, 119, 6, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(217, 119, 6, 0.03) 1px, transparent 1px);
+        }
+
+        :root[data-theme="streamer"] {
+            --color-bg: #0e0e10;
+            --color-card: #18181b;
+            --color-border: #26262c;
+            --color-primary: #9146ff;
+            --color-secondary: #00f59b;
+            --color-accent: #ff4554;
+            --color-text: #efeff1;
+            --color-muted: #adadb8;
+            --font-heading: 'Plus Jakarta Sans', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --theme-radius: 1rem;
+            --theme-shadow: 0 10px 25px -5px rgba(145, 70, 255, 0.2);
+            --bg-grid: radial-gradient(circle at 80% 20%, rgba(145, 70, 255, 0.1) 0%, transparent 40%);
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            background-image: var(--bg-grid);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+            transition: all 0.3s ease;
+        }
+
+        .font-theme-heading {
+            font-family: var(--font-heading);
+        }
+
+        .theme-card {
+            background-color: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--theme-radius);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .selectable-sentence {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .selectable-sentence:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            outline: 1px dashed var(--color-primary);
+        }
+        .selectable-sentence.selected {
+            background-color: var(--color-secondary);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .tts-reading-active {
+            outline: 2px solid var(--color-accent) !important;
+            background-color: rgba(255, 230, 0, 0.15) !important;
+            box-shadow: 0 0 12px var(--color-accent) !important;
+            border-radius: 4px;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #certificateModal, #certificateModal * {
+                visibility: visible;
+            }
+            #certificateModal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background: white !important;
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative overflow-x-hidden">
+
+    <!-- TOP HUD & CONTROL BAR -->
+    <header class="sticky top-0 z-40 bg-theme-bg/95 backdrop-blur-md border-b border-theme-border px-4 py-2.5 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-3">
+            
+            <!-- Agency Logo & Florida B.E.S.T. Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-theme-primary/10 border border-theme-primary flex items-center justify-center text-theme-primary text-xl">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="font-theme-heading text-base sm:text-lg font-black tracking-wider text-theme-text flex items-center gap-2">
+                        SIGNAL &amp; NOISE: <span class="text-theme-primary">FLORIDA B.E.S.T. ELA HQ</span>
+                    </h1>
+                    <p class="text-xs text-theme-muted font-mono flex items-center gap-2">
+                        <span>FL B.E.S.T. STANDARDS</span> • <span id="currentStandardBadge" class="text-theme-accent font-bold">ELA.6.R.2.2</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- GLOBAL NATURAL TTS AUDIO CONTROL BAR -->
+            <div class="flex flex-wrap items-center gap-2 bg-theme-card px-3 py-1.5 rounded-lg border border-theme-border w-full lg:w-auto justify-between lg:justify-end">
+                <div class="flex items-center gap-1.5 text-xs font-mono text-theme-accent font-bold">
+                    <i class="fa-solid fa-microphone-lines animate-pulse"></i>
+                    <span class="hidden sm:inline">NATURAL TTS:</span>
+                </div>
+
+                <div class="flex items-center gap-1">
+                    <button id="ttsPlayBtn" onclick="toggleGlobalSpeech()" class="p-1.5 px-3 rounded bg-theme-primary text-black font-bold text-xs hover:opacity-90 transition flex items-center gap-1">
+                        <i id="ttsPlayIcon" class="fa-solid fa-play"></i> <span id="ttsPlayText">Read Page</span>
+                    </button>
+                    <button onclick="stopSpeech()" class="p-1.5 rounded bg-theme-border text-theme-text hover:text-theme-accent text-xs transition" title="Stop Speech">
+                        <i class="fa-solid fa-square"></i>
+                    </button>
+                </div>
+
+                <!-- Voice Engine & Persona Selector -->
+                <select id="voicePersonaSelect" onchange="updateVoiceSettings()" class="bg-theme-bg text-theme-text border border-theme-border text-xs rounded px-2 py-1 font-mono focus:outline-none focus:border-theme-primary">
+                    <option value="mentor" selected>Calm Mentor</option>
+                    <option value="announcer">Esports Announcer</option>
+                    <option value="instructor">Agency Instructor</option>
+                </select>
+
+                <!-- Voice Engine Selector -->
+                <select id="voiceSelect" onchange="updateVoiceSettings()" class="bg-theme-bg text-theme-text border border-theme-border text-xs rounded px-2 py-1 font-mono focus:outline-none focus:border-theme-primary max-w-[140px] truncate">
+                    <option value="">Auto Detect Voice...</option>
+                </select>
+
+                <!-- Speed Controller -->
+                <div class="flex items-center gap-1 text-xs font-mono">
+                    <span class="text-theme-muted">Speed:</span>
+                    <button onclick="adjustTTSSpeed(-0.1)" class="px-1.5 py-0.5 rounded bg-theme-bg border border-theme-border text-theme-text hover:border-theme-primary">-</button>
+                    <span id="ttsSpeedDisplay" class="w-8 text-center text-theme-primary font-bold">1.0x</span>
+                    <button onclick="adjustTTSSpeed(0.1)" class="px-1.5 py-0.5 rounded bg-theme-bg border border-theme-border text-theme-text hover:border-theme-primary">+</button>
+                </div>
+            </div>
+
+            <!-- XP & Rank Tracker -->
+            <div class="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end">
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <div class="text-[10px] uppercase font-mono text-theme-muted tracking-widest">Agent Rank</div>
+                        <div id="agentRankText" class="text-sm font-theme-heading text-theme-accent font-bold">Novice Scout</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] uppercase font-mono text-theme-muted tracking-widest">Signal XP</div>
+                        <div id="xpDisplay" class="text-base font-theme-heading text-theme-primary font-black">0 XP</div>
+                    </div>
+                </div>
+
+                <!-- Theme Selector -->
+                <select id="themeSelector" onchange="changeTheme(this.value)" class="bg-theme-card border border-theme-border text-theme-text text-xs rounded-lg px-2.5 py-1.5 font-mono focus:outline-none focus:border-theme-primary">
+                    <option value="cyberpunk">🌌 Cyberpunk HUD</option>
+                    <option value="arcade">👾 8-Bit Retro</option>
+                    <option value="spy">🕵️ Secret Agent</option>
+                    <option value="streamer">💜 Stream Overlay</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- B.E.S.T. STANDARDS MODULE NAVIGATION -->
+    <nav class="bg-theme-card/80 border-b border-theme-border px-4 py-2">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-1 overflow-x-auto py-1 text-xs font-mono w-full sm:w-auto">
+                <button onclick="switchModule('centralIdea')" id="nav-centralIdea" class="module-nav-btn px-3 py-1.5 rounded-lg border border-theme-primary bg-theme-primary/20 text-theme-primary font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-bullseye"></i> <span>1. Central Idea (ELA.6.R.2.2)</span>
+                </button>
+                <button onclick="switchModule('authorsPurpose')" id="nav-authorsPurpose" class="module-nav-btn px-3 py-1.5 rounded-lg border border-transparent text-theme-muted hover:text-theme-text transition flex items-center gap-2">
+                    <i class="fa-solid fa-compass"></i> <span>2. Author's Purpose (ELA.6.R.2.3)</span>
+                </button>
+                <button onclick="switchModule('inferencing')" id="nav-inferencing" class="module-nav-btn px-3 py-1.5 rounded-lg border border-transparent text-theme-muted hover:text-theme-text transition flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass"></i> <span>3. Inferences (ELA.6.R.1.1)</span>
+                </button>
+                <button onclick="switchModule('theme')" id="nav-theme" class="module-nav-btn px-3 py-1.5 rounded-lg border border-transparent text-theme-muted hover:text-theme-text transition flex items-center gap-2">
+                    <i class="fa-solid fa-gem"></i> <span>4. Theme (ELA.6.R.1.2)</span>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2 text-xs font-mono">
+                <span class="text-theme-muted">POWER-UPS:</span>
+                <span id="badgeLens" class="px-2 py-0.5 rounded bg-theme-bg border border-theme-border text-theme-muted" title="Ping Lens: Eliminates 1 Wrong Option">
+                    🔍 Ping Lens <span id="lensCount" class="text-theme-accent font-bold">1</span>
+                </span>
+                <span id="badgeMagnet" class="px-2 py-0.5 rounded bg-theme-bg border border-theme-border text-theme-muted" title="Clue Magnet: Highlights Evidence">
+                    🧲 Clue Magnet <span id="magnetCount" class="text-theme-accent font-bold">1</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN QUEST CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+        
+        <!-- MODULE HEADER & FLORIDA B.E.S.T. BENCHMARK BAR -->
+        <div class="theme-card p-6 mb-6 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl text-theme-primary pointer-events-none">
+                <i id="moduleBgIcon" class="fa-solid fa-bullseye"></i>
+            </div>
+            
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <span id="moduleTag" class="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-theme-primary/20 text-theme-primary border border-theme-primary">MODULE 01</span>
+                        <span id="moduleStandard" class="text-xs font-mono text-theme-accent font-bold">FL B.E.S.T. ELA.6.R.2.2</span>
+                    </div>
+                    <h2 id="moduleTitle" class="font-theme-heading text-2xl sm:text-3xl font-black text-theme-text mt-1">
+                        CENTRAL IDEA &amp; RELEVANT DETAILS
+                    </h2>
+                    <p id="moduleDesc" class="text-sm text-theme-muted max-w-3xl mt-1">
+                        Analyze central ideas and relevant supporting details to summarize non-violent gaming articles, speedrunning reports, and parkour level guides.
+                    </p>
+                </div>
+
+                <div class="flex flex-col gap-2 min-w-[260px] bg-theme-bg/60 p-3 rounded-lg border border-theme-border">
+                    <div class="text-xs font-mono text-theme-muted flex items-center justify-between">
+                        <span>FL B.E.S.T. BENCHMARK GOAL:</span>
+                        <button onclick="readText('iCanStatementText')" class="text-theme-primary hover:text-theme-accent" title="Read Benchmark Goal">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+                    <p id="iCanStatementText" class="text-xs text-theme-text font-medium leading-relaxed">
+                        🎯 "I can analyze central ideas and relevant details in a text, and construct an objective summary distinct from personal opinions."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DYNAMIC CONTENT AREA -->
+        <div id="moduleContentArea" class="space-y-6">
+            <!-- Rendered dynamically -->
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-theme-card/60 border-t border-theme-border py-4 px-4 text-center text-xs font-mono text-theme-muted">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div>SIGNAL &amp; NOISE: FLORIDA B.E.S.T. ELA DECODER AGENCY • GRADE 6</div>
+            <div class="flex items-center gap-4">
+                <button onclick="openCertificateModal()" class="text-theme-accent hover:underline flex items-center gap-1">
+                    <i class="fa-solid fa-certificate"></i> View Florida B.E.S.T. Certificate
+                </button>
+                <span>VOICE ENGINE: NATURAL GOOGLE / NEURAL SYNTHESIS</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CERTIFICATE MODAL -->
+    <div id="certificateModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-amber-400 p-8 rounded-xl max-w-2xl w-full text-slate-100 shadow-2xl relative">
+            <button onclick="closeCertificateModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="border-4 border-dashed border-amber-400/40 p-6 rounded-lg text-center space-y-4 bg-slate-950">
+                <div class="text-amber-400 text-4xl">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <h3 class="font-mono text-xs tracking-widest text-amber-400 uppercase">STATE OF FLORIDA B.E.S.T. ELA MASTERY CERTIFICATE</h3>
+                <h2 class="font-bold text-2xl sm:text-3xl font-serif text-white">DECODER AGENCY CERTIFICATION</h2>
+                <p class="text-xs font-mono text-slate-400">THIS CERTIFIES THAT AGENT</p>
+                <div class="text-2xl font-bold font-mono text-cyan-400 border-b border-cyan-400/30 pb-1 max-w-xs mx-auto" contenteditable="true" id="certAgentName">
+                    RECRUIT DECODER
+                </div>
+                <p class="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                    Has successfully mastered Grade 6 Florida B.E.S.T. Standards: ELA.6.R.2.2 (Central Idea), ELA.6.R.2.3 (Author's Purpose), ELA.6.R.1.1 (Inferences), and ELA.6.R.1.2 (Theme) across non-violent gaming simulations.
+                </p>
+                <div class="flex items-center justify-between pt-6 border-t border-slate-800 text-xs font-mono text-slate-400">
+                    <div>
+                        <div>FINAL SCORE / XP</div>
+                        <div id="certXP" class="text-amber-400 font-bold text-sm">0 XP</div>
+                    </div>
+                    <div>
+                        <div>RANK ACHIEVED</div>
+                        <div id="certRank" class="text-cyan-400 font-bold text-sm">Novice Scout</div>
+                    </div>
+                    <div>
+                        <div>B.E.S.T. VERIFIED</div>
+                        <div class="text-emerald-400 font-bold text-sm">100% COMPLIANT</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end gap-3 print:hidden">
+                <button onclick="window.print()" class="px-4 py-2 bg-amber-500 text-black font-bold font-mono rounded text-xs hover:bg-amber-400">
+                    <i class="fa-solid fa-print"></i> Print Certificate
+                </button>
+                <button onclick="closeCertificateModal()" class="px-4 py-2 bg-slate-800 text-slate-300 font-mono rounded text-xs hover:bg-slate-700">
+                    Close Window
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUDIO SOUND SYNTHESIZER -->
+    <script>
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioCtx();
+        }
+
+        function playSound(type) {
+            try {
+                initAudio();
+                if (!audioCtx) return;
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1);
+                    osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'incorrect') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.linearRampToValueAtTime(110, now + 0.2);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'powerup') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(900, now + 0.15);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                }
+            } catch (e) {
+                console.log('Audio error or disabled.');
+            }
+        }
+    </script>
+
+    <!-- MAIN APP CONTROLLER & FLORIDA B.E.S.T. DATA -->
+    <script>
+        const state = {
+            currentModule: 'centralIdea',
+            xp: 0,
+            rank: 'Novice Scout',
+            powerups: {
+                lens: 1,
+                magnet: 1
+            },
+            tts: {
+                speaking: false,
+                rate: 1.0,
+                persona: 'mentor',
+                selectedVoice: null,
+                voices: []
+            }
+        };
+
+        // 100% CLEAN NON-VIOLENT FLORIDA B.E.S.T. MODULES
+        const modules = {
+            centralIdea: {
+                id: 'centralIdea',
+                title: 'CENTRAL IDEA & RELEVANT DETAILS',
+                standard: 'FL B.E.S.T. ELA.6.R.2.2',
+                icon: 'fa-bullseye',
+                iCan: '🎯 "I can analyze central ideas and relevant details in a text, and construct an objective summary distinct from personal opinions."',
+                desc: 'Analyze central ideas and relevant details in gaming patch notes, automated redstone farm tutorials, and parkour obstacle level guides.',
+                briefing: {
+                    title: 'DECODER PROTOCOL: CENTRAL IDEA & SUMMARY',
+                    content: 'In Florida B.E.S.T. Benchmark ELA.6.R.2.2, you must isolate the main central idea while filtering out minor stats and personal opinions:',
+                    table: [
+                        { type: 'Topic', term: 'Subject', def: 'What the text is about in 1–3 words.', ex: 'BlockCraft Odyssey Stamina Update' },
+                        { type: 'Detail', term: 'Supporting Detail', def: 'Specific stats, recipes, or single features.', ex: 'Infinite sprint shoes were added to chest loot.' },
+                        { type: 'Central Idea', term: 'The Signal', def: 'The main message or claim supported by key details.', ex: 'The mobility updates reshaped matches into a tactical game of timing and resource management.' }
+                    ],
+                    formula: 'Topic + Author\'s Main Claim = Central Idea'
+                },
+                mission1: {
+                    title: 'SIMULATION 1: PARKOUR COURSE UPDATE',
+                    passage: 'In the latest update to BlockCraft Odyssey, developers introduced a new stamina bar alongside infinite sprint items for parkour courses. While some players were excited about faster map traversal, the stamina cap forced teams to slow down, plan their jump sequences, and manage stamina reserves carefully. Ultimately, these mobility changes reshaped parkour matches from chaotic rushing into a tactical game of timing and team strategy.',
+                    questions: [
+                        {
+                            id: 'ci_q1',
+                            prompt: 'What is the TOPIC of this patch report?',
+                            options: [
+                                { text: 'A) Infinite sprint items and chest locations', correct: false, reason: 'Too specific! This is a supporting detail.' },
+                                { text: 'B) Parkour mobility updates in BlockCraft Odyssey', correct: true, reason: 'Correct! This is the overall subject in 1-4 words.' },
+                                { text: 'C) How to win maze challenges in video games', correct: false, reason: 'Incorrect. The passage does not cover overall maze guides.' }
+                            ]
+                        },
+                        {
+                            id: 'ci_q2',
+                            prompt: 'Which option represents the CENTRAL IDEA (ELA.6.R.2.2)?',
+                            options: [
+                                { text: 'A) Stamina bars limit how fast players run across maps.', correct: false, reason: 'Noise! This is a minor supporting detail.' },
+                                { text: 'B) Infinite sprint items were added to chest loot.', correct: false, reason: 'Noise! This lists patch notes without the main takeaway.' },
+                                { text: 'C) The mobility updates reshaped parkour matches into a strategic game focused on timing and planning.', correct: true, reason: 'Target Signal! Combines the topic with the main takeaway.' }
+                            ]
+                        }
+                    ]
+                },
+                mission2: {
+                    title: 'SIMULATION 2: EVIDENCE SELECTION',
+                    prompt: 'Select the TWO sentences below that provide direct EVIDENCE for the central idea that "Team Nova won the championship through creative puzzle strategies rather than standard routine play."',
+                    sentences: [
+                        { id: 's1', text: 'During the Global Championship final, Team Nova was behind by two rounds in a best-of-five puzzle match.', evidence: false },
+                        { id: 's2', text: 'Instead of sticking to their standard routine, Team Nova introduced an unexpected map rotation strategy they had never revealed before.', evidence: true },
+                        { id: 's3', text: 'The sudden shift completely surprised their opponents.', evidence: true },
+                        { id: 's4', text: 'Thousands of fans cheered from the arena seating as the final score appeared.', evidence: false }
+                    ]
+                },
+                boss: {
+                    title: 'MASTERY EVALUATION: SPEEDRUNNING FOR CHARITY',
+                    passage: 'Video game speedrunning—the art of completing a game as quickly as possible—has grown from an obscure online hobby into a multi-million dollar charity phenomenon. Annual events like Games Done Quick broadcast players using clever level skips, executing pixel-perfect jumps, and solving classic puzzle titles in minutes. Thousands of viewers tune in live, donating millions to clean water initiatives and hospital programs. Speedrunning is no longer just about personal high scores; it has evolved into a global community force that uses gaming mastery to create real-world charitable impact.',
+                    questions: [
+                        {
+                            prompt: 'What is the Central Idea of the passage?',
+                            options: [
+                                { text: 'A) Speedrunners execute pixel-perfect jumps to complete games quickly.', correct: false },
+                                { text: 'B) Speedrunning has evolved from a hobby into a global force that uses gaming skills for charitable impact.', correct: true },
+                                { text: 'C) Games Done Quick is an annual live broadcast on streaming platforms.', correct: false }
+                            ]
+                        },
+                        {
+                            prompt: 'Which statement is a RELEVANT SUPPORTING DETAIL rather than the Central Idea?',
+                            options: [
+                                { text: 'A) Viewers donate millions of dollars to clean water initiatives during streams.', correct: true },
+                                { text: 'B) Gaming skills can be transformed into positive real-world action.', correct: false },
+                                { text: 'C) Speedrunning community events unite players around meaningful causes.', correct: false }
+                            ]
+                        }
+                    ]
+                }
+            },
+
+            authorsPurpose: {
+                id: 'authorsPurpose',
+                title: 'AUTHOR\'S PURPOSE & POINT OF VIEW',
+                standard: 'FL B.E.S.T. ELA.6.R.2.3',
+                icon: 'fa-compass',
+                iCan: '🎯 "I can analyze an author\'s purpose and explain how an author develops their point of view in a text."',
+                desc: 'Evaluate why an author wrote a gaming article using the P.I.E.E. framework: Persuade, Inform, Entertain, or Explain.',
+                briefing: {
+                    title: 'DECODER PROTOCOL: AUTHOR\'S PURPOSE (ELA.6.R.2.3)',
+                    content: 'Authors write for specific reasons. Analyze tone, word choice, and structure to decode point of view:',
+                    table: [
+                        { type: 'Persuade', term: 'Convince', def: 'The author wants you to agree with their opinion or purchase gear.', ex: 'Why you MUST buy the new Ergonomic Gaming Mouse.' },
+                        { type: 'Inform', term: 'Educate', def: 'The author gives factual information, stats, or history.', ex: 'The history of pixel graphics from 1980 to 2026.' },
+                        { type: 'Entertain', term: 'Amuse', def: 'The author tells an exciting story or funny experience.', ex: 'My funniest multiplayer physics glitches of the week.' },
+                        { type: 'Explain/Describe', term: 'Guide', def: 'The author shows step-by-step instructions or describes a process.', ex: 'How to build an automated redstone farm step-by-step.' }
+                    ],
+                    formula: 'Text Structure + Word Choice = Author\'s Purpose & Point of View'
+                },
+                mission1: {
+                    title: 'SIMULATION 1: GAMING HARDWARE INTENT',
+                    passage: 'The new Titan-X Mechanical Keyboard is without a doubt the finest gaming gear ever produced. Its custom keys register inputs 40% faster than standard keyboards, giving players a clear competitive edge in speedrunning. If you are serious about upgrading your reaction speed and winning more matches, you need to replace your old keyboard with the Titan-X today.',
+                    questions: [
+                        {
+                            id: 'ap_q1',
+                            prompt: 'What is the PRIMARY purpose of this passage (ELA.6.R.2.3)?',
+                            options: [
+                                { text: 'A) To inform readers about how keyboard switches are manufactured.', correct: false, reason: 'Incorrect. The author expresses strong opinions, not manufacturing facts.' },
+                                { text: 'B) To persuade readers to purchase the Titan-X keyboard.', correct: true, reason: 'Correct! Words like "without a doubt the finest" and "you need to replace" show persuasive intent.' },
+                                { text: 'C) To entertain readers with a funny story about keyboard keys.', correct: false, reason: 'Incorrect. There is no humor or story structure here.' }
+                            ]
+                        }
+                    ]
+                },
+                mission2: {
+                    title: 'SIMULATION 2: EVIDENCE CLUE SELECTOR',
+                    prompt: 'Select the TWO sentences that reveal the author\'s main intent is to EXPLAIN step-by-step level building.',
+                    sentences: [
+                        { id: 'ap_s1', text: 'Building custom levels in Sandbox World is an awesome hobby for creative gamers.', evidence: false },
+                        { id: 'ap_s2', text: 'First, place your spawn platform on solid ground to give players a safe starting spot.', evidence: true },
+                        { id: 'ap_s3', text: 'Next, adjust the lighting values in the environment menu to set a calm atmospheric mood.', evidence: true },
+                        { id: 'ap_s4', text: 'Sandbox World has sold over 10 million copies worldwide since its release.', evidence: false }
+                    ]
+                },
+                boss: {
+                    title: 'MASTERY EVALUATION: ESPORTS TOURNAMENT REPORT',
+                    passage: 'The Junior Code & Craft Championship will take place on Saturday, October 14th at the City Tech Center. Registration opens at 9:00 AM, and the preliminary puzzle challenge begins promptly at 10:00 AM. Competitors will be evaluated on puzzle-solving speed, code efficiency, and team cooperation. Entry tickets cost $15, with all proceeds funding school robotics programs.',
+                    questions: [
+                        {
+                            prompt: 'What is the author\'s main purpose in writing this report?',
+                            options: [
+                                { text: 'A) To entertain readers with a story about a student winning a tournament.', correct: false },
+                                { text: 'B) To inform readers about event details, schedule, and registration for the championship.', correct: true },
+                                { text: 'C) To persuade readers that puzzle games are better than action games.', correct: false }
+                            ]
+                        }
+                    ]
+                }
+            },
+
+            inferencing: {
+                id: 'inferencing',
+                title: 'MAKING INFERENCES',
+                standard: 'FL B.E.S.T. ELA.6.R.1.1',
+                icon: 'fa-magnifying-glass',
+                iCan: '🎯 "I can combine explicit textual evidence with prior knowledge (schema) to draw logical inferences."',
+                desc: 'Analyze how key elements enhance meaning, using textual evidence to draw valid inferences in non-violent scenarios.',
+                briefing: {
+                    title: 'DECODER PROTOCOL: INFERENCES (ELA.6.R.1.1)',
+                    content: 'An inference is a logical conclusion supported by evidence and background knowledge—never a random guess!',
+                    table: [
+                        { type: 'Text Evidence', term: 'Explicit Facts', def: 'What the author directly writes on the page.', ex: 'Leo set down his headphones and stared silently at the defeat screen.' },
+                        { type: 'Schema', term: 'Prior Knowledge', def: 'What you already know about real life and gaming.', ex: 'Players go quiet and remove headsets when they lose a close match.' },
+                        { type: 'Inference', term: 'Hidden Meaning', def: 'The conclusion drawn by connecting both.', ex: 'Leo is frustrated because his team lost a very close match.' }
+                    ],
+                    formula: 'Text Evidence + Schema (Prior Knowledge) = Valid Inference'
+                },
+                mission1: {
+                    title: 'SIMULATION 1: THE ABANDONED SERVER',
+                    passage: 'As Maya logged into the forgotten private server, her avatar stood on a hill overlooking an empty plaza. Cobblestone towers sat half-finished, with stone blocks left in chest inventories dated 800 days ago. A sign near the fountain read: "Build Night Every Friday!" but the player list showed only Maya\'s name.',
+                    questions: [
+                        {
+                            id: 'inf_q1',
+                            prompt: 'What can you INFER about this server (ELA.6.R.1.1)?',
+                            options: [
+                                { text: 'A) Maya created the server ten minutes ago.', correct: false, reason: 'Incorrect. The 800-day-old chest logs prove it has existed for over two years.' },
+                                { text: 'B) The server was once an active building hub, but has since been abandoned by Maya\'s group.', correct: true, reason: 'Correct! The half-finished structures and dated chests strongly support this inference.' },
+                                { text: 'C) The server was deleted by game administrators.', correct: false, reason: 'Incorrect. Maya was able to log in, so it was not deleted.' }
+                            ]
+                        }
+                    ]
+                },
+                mission2: {
+                    title: 'SIMULATION 2: EVIDENCE SELECTION',
+                    prompt: 'Select the TWO sentences that best support the inference that "Jordan practiced the speedrun track dozens of times before the tournament."',
+                    sentences: [
+                        { id: 'inf_s1', text: 'Jordan smoothly navigated the tricky icy corners without glancing at the map once.', evidence: true },
+                        { id: 'inf_s2', text: 'The tournament arena was bright with neon spotlights and cheering fans.', evidence: false },
+                        { id: 'inf_s3', text: 'His muscle memory took over during the difficult triple-jump section, executing it flawlessly.', evidence: true },
+                        { id: 'inf_s4', text: 'He wore his lucky red team jersey for the final match.', evidence: false }
+                    ]
+                },
+                boss: {
+                    title: 'MASTERY EVALUATION: PROJECT OMEGA GLITCH',
+                    passage: 'During the live stream, Sam\'s screen suddenly froze right before he crossed the finish line of a world-record speedrun. He looked at his internet router; the connection light was flashing dark red. Sam let out a long sigh, leaned back in his chair, and muted his microphone before turning off the monitor.',
+                    questions: [
+                        {
+                            prompt: 'What can you infer about why Sam muted his microphone and turned off his monitor?',
+                            options: [
+                                { text: 'A) He won the world record and wanted to celebrate in silence.', correct: false },
+                                { text: 'B) He was disappointed and frustrated because an internet disconnect ruined his record attempt.', correct: true },
+                                { text: 'C) He was tired and decided to go to sleep.', correct: false }
+                            ]
+                        }
+                    ]
+                }
+            },
+
+            theme: {
+                id: 'theme',
+                title: 'DETERMINING THEME',
+                standard: 'FL B.E.S.T. ELA.6.R.1.2',
+                icon: 'fa-gem',
+                iCan: '🎯 "I can analyze the development of stated or implied universal themes in a gaming narrative."',
+                desc: 'Uncover universal lessons and morals conveyed through character growth and conflict resolution.',
+                briefing: {
+                    title: 'DECODER PROTOCOL: THEME DEVELOPMENT (ELA.6.R.1.2)',
+                    content: 'A theme is a universal message about life that applies to everyone—not just characters in a specific story.',
+                    table: [
+                        { type: 'Topic', term: '1-2 Words', def: 'The general subject of the story.', ex: 'Teamwork, Perseverance, Integrity.' },
+                        { type: 'Plot', term: 'Specific Events', def: 'What happens to specific characters.', ex: 'Marcus refused help until his wall fell in a storm.' },
+                        { type: 'Theme', term: 'Universal Truth', def: 'The deeper moral lesson for real life.', ex: 'Accepting community support creates stronger outcomes than isolation.' }
+                    ],
+                    formula: 'Topic + Character Growth = Universal Theme'
+                },
+                mission1: {
+                    title: 'SIMULATION 1: THE SOLO STRATEGY',
+                    passage: 'In the game Realm Builders, Marcus refused to join guilds. He insisted on building his mega-fortress completely alone, rejecting resource trades from nearby players. When a massive storm event hit his region, his solo walls crumbled under the heavy weather. Seeing his fortress fall, neighboring guild members rushed over with emergency repair materials and helped him rebuild stronger walls in minutes. Marcus realized that accepting support from others made his creations far stronger than working in isolation.',
+                    questions: [
+                        {
+                            id: 'th_q1',
+                            prompt: 'What is the UNIVERSAL THEME of Marcus\'s story (ELA.6.R.1.2)?',
+                            options: [
+                                { text: 'A) Building stone walls in Realm Builders requires rare materials.', correct: false, reason: 'This is just a specific gameplay detail.' },
+                                { text: 'B) Accepting community support creates stronger outcomes than stubborn isolation.', correct: true, reason: 'Correct! This is a universal life lesson supported by Marcus\'s character growth.' },
+                                { text: 'C) Mega-fortresses should never be built during storm events.', correct: false, reason: 'This is a plot rule, not a universal moral theme.' }
+                            ]
+                        }
+                    ]
+                },
+                mission2: {
+                    title: 'SIMULATION 2: EVIDENCE SELECTION',
+                    prompt: 'Select the TWO sentences that reveal the theme "Honesty and sportsmanship are more valuable than winning by exploiting glitches."',
+                    sentences: [
+                        { id: 'th_s1', text: 'Elena noticed a glitch in the puzzle game that would give her infinite score points automatically.', evidence: false },
+                        { id: 'th_s2', text: 'Instead of exploiting the bug to take first place, she reported the glitch to the tournament referee.', evidence: true },
+                        { id: 'th_s3', text: 'She ended up placing second in the tournament standings.', evidence: false },
+                        { id: 'th_s4', text: 'Though she did not win the trophy, she slept peacefully knowing she earned her medal with genuine skill and integrity.', evidence: true }
+                    ]
+                },
+                boss: {
+                    title: 'MASTERY EVALUATION: THE NEW RECRUIT',
+                    passage: 'When rookie player Kai joined the veteran esports roster, senior captain Chen assigned him simple inventory organization tasks. Kai felt frustrated, wanting to showcase his high-level puzzle skills immediately. However, Kai completed every inventory task meticulously, keeping team gear perfectly sorted during high-speed matches. Recognizing Kai\'s dedication and humble work ethic, Captain Chen promoted him to co-strategist for the finals.',
+                    questions: [
+                        {
+                            prompt: 'Which theme statement is best developed in this narrative?',
+                            options: [
+                                { text: 'A) Senior captains always give unfair tasks to new team members.', correct: false },
+                                { text: 'B) Humility, patience, and dedication in small tasks lay the foundation for greater responsibility.', correct: true },
+                                { text: 'C) Sorting inventory items quickly is the most important skill in gaming.', correct: false }
+                            ]
+                        }
+                    ]
+                }
+            }
+        };
+
+        // DOM INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            initVoices();
+            renderModule('centralIdea');
+
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = initVoices;
+            }
+        });
+
+        // VOICE INIT WITH GOOGLE/NEURAL PRIORITIZATION
+        function initVoices() {
+            if (!('speechSynthesis' in window)) return;
+            const voiceSelect = document.getElementById('voiceSelect');
+            const voices = speechSynthesis.getVoices();
+            state.tts.voices = voices;
+
+            if (voices.length === 0) return;
+
+            voiceSelect.innerHTML = '';
+            let defaultIndex = 0;
+
+            voices.forEach((v, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${v.name} (${v.lang})`;
+
+                if (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium')) {
+                    option.textContent = `⭐ ${v.name}`;
+                }
+
+                voiceSelect.appendChild(option);
+
+                if (v.name.includes('Google US English') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Zira')) {
+                    defaultIndex = index;
+                }
+            });
+
+            voiceSelect.selectedIndex = defaultIndex;
+            state.tts.selectedVoice = voices[defaultIndex];
+        }
+
+        function updateVoiceSettings() {
+            const voiceIndex = document.getElementById('voiceSelect').value;
+            if (voiceIndex !== "" && state.tts.voices[voiceIndex]) {
+                state.tts.selectedVoice = state.tts.voices[voiceIndex];
+            }
+            state.tts.persona = document.getElementById('voicePersonaSelect').value;
+        }
+
+        function adjustTTSSpeed(delta) {
+            let newRate = Math.round((state.tts.rate + delta) * 10) / 10;
+            if (newRate < 0.6) newRate = 0.6;
+            if (newRate > 1.8) newRate = 1.8;
+            state.tts.rate = newRate;
+            document.getElementById('ttsSpeedDisplay').textContent = `${newRate.toFixed(1)}x`;
+        }
+
+        // SPEECH SYNTHESIS ENGINE
+        function readText(elementIdOrText) {
+            if (!('speechSynthesis' in window)) {
+                alert('Text-to-Speech is not supported in this browser.');
+                return;
+            }
+
+            stopSpeech();
+
+            let textToRead = '';
+            let targetElem = null;
+
+            if (typeof elementIdOrText === 'string') {
+                targetElem = document.getElementById(elementIdOrText);
+                if (targetElem) {
+                    textToRead = targetElem.innerText || targetElem.textContent;
+                } else {
+                    textToRead = elementIdOrText;
+                }
+            }
+
+            if (!textToRead.trim()) return;
+
+            if (targetElem) {
+                targetElem.classList.add('tts-reading-active');
+            }
+
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+
+            if (state.tts.selectedVoice) {
+                utterance.voice = state.tts.selectedVoice;
+            }
+
+            let pitch = 1.0;
+            let rate = state.tts.rate;
+
+            if (state.tts.persona === 'announcer') {
+                pitch = 1.15;
+                rate = Math.min(rate * 1.1, 1.6);
+            } else if (state.tts.persona === 'mentor') {
+                pitch = 0.95;
+                rate = Math.max(rate * 0.95, 0.8);
+            }
+
+            utterance.pitch = pitch;
+            utterance.rate = rate;
+
+            utterance.onend = () => {
+                if (targetElem) targetElem.classList.remove('tts-reading-active');
+                state.tts.speaking = false;
+                updateTTSBtnUI(false);
+            };
+
+            utterance.onerror = () => {
+                if (targetElem) targetElem.classList.remove('tts-reading-active');
+                state.tts.speaking = false;
+                updateTTSBtnUI(false);
+            };
+
+            state.tts.speaking = true;
+            updateTTSBtnUI(true);
+            speechSynthesis.speak(utterance);
+        }
+
+        function toggleGlobalSpeech() {
+            if (state.tts.speaking) {
+                stopSpeech();
+            } else {
+                readText('moduleContentArea');
+            }
+        }
+
+        function stopSpeech() {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+            state.tts.speaking = false;
+            updateTTSBtnUI(false);
+            document.querySelectorAll('.tts-reading-active').forEach(el => el.classList.remove('tts-reading-active'));
+        }
+
+        function updateTTSBtnUI(isPlaying) {
+            const playIcon = document.getElementById('ttsPlayIcon');
+            const playText = document.getElementById('ttsPlayText');
+            if (isPlaying) {
+                playIcon.className = 'fa-solid fa-pause';
+                playText.textContent = 'Pause Speech';
+            } else {
+                playIcon.className = 'fa-solid fa-play';
+                playText.textContent = 'Read Page';
+            }
+        }
+
+        // MODULE RENDERER
+        function switchModule(modId) {
+            playSound('click');
+            stopSpeech();
+            state.currentModule = modId;
+
+            document.querySelectorAll('.module-nav-btn').forEach(btn => {
+                btn.className = 'module-nav-btn px-3 py-1.5 rounded-lg border border-transparent text-theme-muted hover:text-theme-text transition flex items-center gap-2';
+            });
+
+            const activeNav = document.getElementById(`nav-${modId}`);
+            if (activeNav) {
+                activeNav.className = 'module-nav-btn px-3 py-1.5 rounded-lg border border-theme-primary bg-theme-primary/20 text-theme-primary font-bold transition flex items-center gap-2';
+            }
+
+            renderModule(modId);
+        }
+
+        function renderModule(modId) {
+            const mod = modules[modId];
+            if (!mod) return;
+
+            document.getElementById('currentStandardBadge').textContent = mod.standard;
+            document.getElementById('moduleTag').textContent = `MODULE ${modId.toUpperCase()}`;
+            document.getElementById('moduleStandard').textContent = mod.standard;
+            document.getElementById('moduleTitle').textContent = mod.title;
+            document.getElementById('moduleDesc').textContent = mod.desc;
+            document.getElementById('moduleBgIcon').className = `fa-solid ${mod.icon}`;
+            document.getElementById('iCanStatementText').textContent = mod.iCan;
+
+            const contentArea = document.getElementById('moduleContentArea');
+
+            contentArea.innerHTML = `
+                <!-- BRIEFING SECTION -->
+                <section class="theme-card p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-theme-border pb-3">
+                        <div class="flex items-center gap-2 text-theme-primary font-theme-heading font-bold text-lg">
+                            <i class="fa-solid fa-book-open"></i>
+                            <span>${mod.briefing.title}</span>
+                        </div>
+                        <button onclick="readText('briefingContentCard')" class="text-xs font-mono bg-theme-primary/10 border border-theme-primary text-theme-primary px-2.5 py-1 rounded hover:bg-theme-primary hover:text-black transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-volume-high"></i> Read Briefing
+                        </button>
+                    </div>
+
+                    <div id="briefingContentCard" class="space-y-4">
+                        <p class="text-sm text-theme-text leading-relaxed">${mod.briefing.content}</p>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs font-mono border-collapse">
+                                <thead>
+                                    <tr class="bg-theme-bg border-b border-theme-border text-theme-accent">
+                                        <th class="p-2.5">ELEMENT</th>
+                                        <th class="p-2.5">AGENCY TERM</th>
+                                        <th class="p-2.5">DEFINITION</th>
+                                        <th class="p-2.5">GAMING EXAMPLE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${mod.briefing.table.map(row => `
+                                        <tr class="border-b border-theme-border/50 hover:bg-theme-bg/40">
+                                            <td class="p-2.5 font-bold text-theme-primary">${row.type}</td>
+                                            <td class="p-2.5 text-theme-secondary">${row.term}</td>
+                                            <td class="p-2.5 text-theme-text">${row.def}</td>
+                                            <td class="p-2.5 text-theme-muted italic">${row.ex}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="bg-theme-bg p-3 rounded border border-theme-accent/40 flex items-center justify-between gap-2">
+                            <div class="text-xs font-mono">
+                                <span class="text-theme-accent font-bold">FL B.E.S.T. FORMULA:</span>
+                                <span class="text-theme-text font-bold ml-2">${mod.briefing.formula}</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PRACTICE SIMULATIONS -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- SIMULATION 1 -->
+                    <section class="theme-card p-6 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between border-b border-theme-border pb-2">
+                                <div class="font-theme-heading font-bold text-base text-theme-accent flex items-center gap-2">
+                                    <i class="fa-solid fa-gamepad"></i>
+                                    <span>${mod.mission1.title}</span>
+                                </div>
+                                <button onclick="readText('sim1PassageCard')" class="text-xs font-mono text-theme-primary hover:underline flex items-center gap-1">
+                                    <i class="fa-solid fa-volume-high"></i> Read
+                                </button>
+                            </div>
+
+                            <div id="sim1PassageCard" class="bg-theme-bg p-4 rounded border border-theme-border text-xs text-theme-text leading-relaxed font-sans relative">
+                                <div class="text-[10px] font-mono text-theme-muted uppercase mb-1">TRANSMISSION #101</div>
+                                ${mod.mission1.passage}
+                            </div>
+
+                            <div class="flex items-center justify-end gap-2 pt-1">
+                                <button onclick="usePowerup('lens', '${mod.mission1.questions[0].id}')" class="text-xs font-mono bg-theme-bg border border-theme-accent/60 text-theme-accent px-2.5 py-1 rounded hover:bg-theme-accent hover:text-black transition flex items-center gap-1">
+                                    🔍 Use Ping Lens (-1 Option)
+                                </button>
+                            </div>
+
+                            <div class="space-y-3 pt-2">
+                                ${mod.mission1.questions.map((q) => `
+                                    <div class="space-y-2">
+                                        <div class="text-xs font-bold text-theme-text flex items-center justify-between">
+                                            <span>${q.prompt}</span>
+                                            <button onclick="readText('${q.id}_prompt')" class="text-theme-muted hover:text-theme-primary">
+                                                <i class="fa-solid fa-volume-high"></i>
+                                            </button>
+                                        </div>
+                                        <div id="${q.id}_prompt" class="hidden">${q.prompt}</div>
+                                        <div id="${q.id}_options" class="space-y-1.5">
+                                            ${q.options.map((opt, oIdx) => `
+                                                <button onclick="checkAnswer('${q.id}', ${oIdx}, ${opt.correct}, '${opt.reason.replace(/'/g, "\\'")}')" id="${q.id}_opt_${oIdx}" class="w-full text-left p-2.5 rounded bg-theme-bg border border-theme-border text-xs text-theme-text hover:border-theme-primary transition flex items-center justify-between">
+                                                    <span>${opt.text}</span>
+                                                    <i class="fa-solid fa-chevron-right opacity-40"></i>
+                                                </button>
+                                            `).join('')}
+                                        </div>
+                                        <div id="${q.id}_feedback" class="hidden text-xs p-2.5 rounded font-mono"></div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SIMULATION 2 -->
+                    <section class="theme-card p-6 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between border-b border-theme-border pb-2">
+                                <div class="font-theme-heading font-bold text-base text-theme-accent flex items-center gap-2">
+                                    <i class="fa-solid fa-highlighter"></i>
+                                    <span>${mod.mission2.title}</span>
+                                </div>
+                                <button onclick="readText('sim2PromptCard')" class="text-xs font-mono text-theme-primary hover:underline flex items-center gap-1">
+                                    <i class="fa-solid fa-volume-high"></i> Read
+                                </button>
+                            </div>
+
+                            <p id="sim2PromptCard" class="text-xs text-theme-text font-medium">${mod.mission2.prompt}</p>
+
+                            <div class="bg-theme-bg p-4 rounded border border-theme-border text-xs text-theme-text leading-relaxed font-sans space-y-2">
+                                ${mod.mission2.sentences.map(s => `
+                                    <span id="${s.id}" onclick="toggleSentenceSelect('${s.id}')" class="selectable-sentence block p-1.5 rounded">
+                                        ${s.text}
+                                    </span>
+                                `).join('')}
+                            </div>
+
+                            <button onclick="verifyEvidenceSelection('${modId}')" class="w-full py-2 bg-theme-secondary text-white font-mono font-bold text-xs rounded hover:opacity-90 transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-check-double"></i> Verify Selected Clues
+                            </button>
+
+                            <div id="sim2Feedback" class="hidden text-xs p-2.5 rounded font-mono"></div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- MASTERY EVALUATION -->
+                <section class="theme-card p-6 space-y-4 border-2 border-theme-accent/60">
+                    <div class="flex items-center justify-between border-b border-theme-border pb-3">
+                        <div class="flex items-center gap-2 text-theme-accent font-theme-heading font-bold text-lg">
+                            <i class="fa-solid fa-trophy"></i>
+                            <span>${mod.boss.title}</span>
+                        </div>
+                        <span class="text-xs font-mono bg-theme-accent/20 text-theme-accent px-2.5 py-1 rounded border border-theme-accent font-bold">
+                            FINAL BENCHMARK PROTOCOL • +200 XP
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-mono text-theme-muted uppercase">EVALUATION PASSAGE</span>
+                                <button onclick="readText('bossPassageCard')" class="text-xs font-mono text-theme-primary hover:underline flex items-center gap-1">
+                                    <i class="fa-solid fa-volume-high"></i> Read Passage
+                                </button>
+                            </div>
+                            <div id="bossPassageCard" class="bg-theme-bg p-4 rounded border border-theme-border text-xs text-theme-text leading-relaxed">
+                                ${mod.boss.passage}
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            ${mod.boss.questions.map((bq, bIdx) => `
+                                <div class="space-y-2">
+                                    <div class="text-xs font-bold text-theme-text flex items-center justify-between">
+                                        <span>QUESTION ${bIdx + 1}: ${bq.prompt}</span>
+                                        <button onclick="readText('boss_q_${bIdx}_text')" class="text-theme-muted hover:text-theme-primary">
+                                            <i class="fa-solid fa-volume-high"></i>
+                                        </button>
+                                    </div>
+                                    <div id="boss_q_${bIdx}_text" class="hidden">${bq.prompt}</div>
+                                    <div class="space-y-1.5">
+                                        ${bq.options.map((bOpt, bOIdx) => `
+                                            <button onclick="checkBossAnswer('${modId}', ${bIdx}, ${bOIdx}, ${bOpt.correct})" id="boss_${modId}_${bIdx}_${bOIdx}" class="w-full text-left p-2.5 rounded bg-theme-bg border border-theme-border text-xs text-theme-text hover:border-theme-accent transition">
+                                                ${bOpt.text}
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                            <div id="bossFeedback_${modId}" class="hidden text-xs p-3 rounded font-mono"></div>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        // SIMULATION ANSWER CHECK
+        function checkAnswer(qId, optIdx, isCorrect, reason) {
+            playSound(isCorrect ? 'correct' : 'incorrect');
+            const feedbackEl = document.getElementById(`${qId}_feedback`);
+            feedbackEl.classList.remove('hidden', 'bg-emerald-950/80', 'text-emerald-300', 'border-emerald-500', 'bg-rose-950/80', 'text-rose-300', 'border-rose-500');
+
+            if (isCorrect) {
+                feedbackEl.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border', 'border-emerald-500');
+                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> <strong>CORRECT BENCHMARK SIGNAL!</strong> ${reason}`;
+                addXP(100);
+            } else {
+                feedbackEl.classList.add('bg-rose-950/80', 'text-rose-300', 'border', 'border-rose-500');
+                feedbackEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>INTERFERENCE DETECTED:</strong> ${reason}`;
+            }
+
+            readText(feedbackEl.innerText);
+        }
+
+        // POWERUP: PING LENS
+        function usePowerup(type, qId) {
+            if (type === 'lens') {
+                if (state.powerups.lens <= 0) {
+                    alert('No Ping Lens power-ups remaining!');
+                    return;
+                }
+                playSound('powerup');
+                state.powerups.lens--;
+                document.getElementById('lensCount').textContent = state.powerups.lens;
+
+                const mod = modules[state.currentModule];
+                const q = mod.mission1.questions.find(item => item.id === qId);
+                if (q) {
+                    const wrongIndices = [];
+                    q.options.forEach((opt, idx) => {
+                        if (!opt.correct) wrongIndices.push(idx);
+                    });
+                    if (wrongIndices.length > 0) {
+                        const eliminateIdx = wrongIndices[0];
+                        const btn = document.getElementById(`${qId}_opt_${eliminateIdx}`);
+                        if (btn) {
+                            btn.style.opacity = '0.3';
+                            btn.style.textDecoration = 'line-through';
+                            btn.disabled = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        function toggleSentenceSelect(sentenceId) {
+            playSound('click');
+            const el = document.getElementById(sentenceId);
+            if (el) el.classList.toggle('selected');
+        }
+
+        function verifyEvidenceSelection(modId) {
+            const mod = modules[modId];
+            const sentences = mod.mission2.sentences;
+            let correctCount = 0;
+            let totalEvidence = sentences.filter(s => s.evidence).length;
+
+            sentences.forEach(s => {
+                const el = document.getElementById(s.id);
+                if (el && el.classList.contains('selected') && s.evidence) {
+                    correctCount++;
+                }
+            });
+
+            const fb = document.getElementById('sim2Feedback');
+            fb.classList.remove('hidden', 'bg-emerald-950/80', 'text-emerald-300', 'border-emerald-500', 'bg-rose-950/80', 'text-rose-300', 'border-rose-500');
+
+            if (correctCount === totalEvidence) {
+                playSound('correct');
+                fb.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border', 'border-emerald-500');
+                fb.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> <strong>EVIDENCE VERIFIED!</strong> You correctly highlighted all supporting evidence clues. (+150 XP)`;
+                addXP(150);
+            } else {
+                playSound('incorrect');
+                fb.classList.add('bg-rose-950/80', 'text-rose-300', 'border', 'border-rose-500');
+                fb.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1"></i> <strong>INCOMPLETE EVIDENCE:</strong> You found ${correctCount} of ${totalEvidence} correct evidence clues. Re-read carefully!`;
+            }
+
+            readText(fb.innerText);
+        }
+
+        function checkBossAnswer(modId, qIdx, optIdx, isCorrect) {
+            playSound(isCorrect ? 'correct' : 'incorrect');
+            const fb = document.getElementById(`bossFeedback_${modId}`);
+            fb.classList.remove('hidden', 'bg-emerald-950/80', 'text-emerald-300', 'border-emerald-500', 'bg-rose-950/80', 'text-rose-300', 'border-rose-500');
+
+            if (isCorrect) {
+                fb.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border', 'border-emerald-500');
+                fb.innerHTML = `<i class="fa-solid fa-trophy mr-1"></i> <strong>BENCHMARK MASTERY CONFIRMED!</strong> Correct answer for Question ${qIdx + 1}. (+100 XP)`;
+                addXP(100);
+            } else {
+                fb.classList.add('bg-rose-950/80', 'text-rose-300', 'border', 'border-rose-500');
+                fb.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>INCORRECT:</strong> Re-analyze the passage structure and try again.`;
+            }
+
+            readText(fb.innerText);
+        }
+
+        function addXP(amount) {
+            state.xp += amount;
+            document.getElementById('xpDisplay').textContent = `${state.xp} XP`;
+            document.getElementById('certXP').textContent = `${state.xp} XP`;
+
+            if (state.xp >= 1000) {
+                state.rank = 'Master B.E.S.T. Decoder';
+            } else if (state.xp >= 500) {
+                state.rank = 'Tactical Sleuth';
+            } else if (state.xp >= 200) {
+                state.rank = 'Signal Receiver';
+            } else {
+                state.rank = 'Novice Scout';
+            }
+
+            document.getElementById('agentRankText').textContent = state.rank;
+            document.getElementById('certRank').textContent = state.rank;
+        }
+
+        function changeTheme(themeKey) {
+            playSound('click');
+            document.documentElement.setAttribute('data-theme', themeKey);
+        }
+
+        function openCertificateModal() {
+            playSound('click');
+            document.getElementById('certificateModal').classList.remove('hidden');
+        }
+
+        function closeCertificateModal() {
+            playSound('click');
+            document.getElementById('certificateModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
